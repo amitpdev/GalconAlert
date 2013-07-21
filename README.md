@@ -1,7 +1,6 @@
 GalconAlert
 ===========
 
-GalconAlert
 This tiny BASH script will send you a push notification alert 
 whenever one of your friends is playing Galcon !
 
