@@ -1,19 +1,18 @@
 #!/bin/bash
 
-
 # This is where you should name the friends you want to track
 FRIENDS_LIST='justrafi ronenli yakirh'
 
 MAX_FILE_AGE_IN_SECONDS=1200 # 60*20
 GALCON_RECENT_URL='http://www.galcon.com/iphone/recent.php'
 TEMP_RECENT_FILE='/var/tmp/galcon_recent.php'
+GALCON_PUSH_PHP='/home/scotbond/galcon/galcon_push.php'
 
 send_push_notif()
 {
-	touch /var/tmp/.$1
-	# send me push notification
-	/usr/bin/php galcon_push.php $1 &>/dev/null
 	now=$(date)
+	# send me push notification
+	/usr/bin/php $GALCON_PUSH_PHP $1 &>/dev/null
 	if [ $? -eq 0 ];then
 		echo "$now: Notification was sent for user $1!"
 	else
@@ -38,9 +37,11 @@ for friend in $FRIENDS_LIST; do
 		       time_now_epoch="$(date '+%s')"
 		       delta_time=$(($time_now_epoch - $time_epoch))
 		       if [ $delta_time -gt ${MAX_FILE_AGE_IN_SECONDS} ]; then
+				touch /var/tmp/.$friend
 				send_push_notif $friend
 		       fi
 		else
+				touch /var/tmp/.$friend
 				send_push_notif $friend
 		fi
 	fi
